@@ -1,6 +1,6 @@
 {
   "name": "vue-waterfall-ex",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "vue瀑布流组件",
   "author": "zeronofreya <zeronofreya@gmail.com>",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name vue-waterfall-ex ./src/index.ts"
+    "lib": "vue-cli-service build --target lib --name vue-waterfall-ex ./src/components/index.ts"
   },
   "repository": {
     "type": "git",
