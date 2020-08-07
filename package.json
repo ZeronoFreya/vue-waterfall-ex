@@ -1,11 +1,11 @@
 {
   "name": "vue-waterfall-ex",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "vue瀑布流组件",
   "author": "zeronofreya <zeronofreya@gmail.com>",
   "license": "MIT",
   "private": false,
-  "main": "lib/vue-waterfall-ex.umd.min.js",
+  "main": "dist/vue-waterfall-ex.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -28,10 +28,7 @@
     "waterfall"
   ],
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2"
+    "lodash-decorators": "^6.0.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.33.0",
@@ -41,11 +38,19 @@
     "@vue/cli-plugin-typescript": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "@vue/eslint-config-typescript": "^5.0.2",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "pug": "^3.0.0",
+    "pug-html-loader": "^1.1.5",
+    "pug-plain-loader": "^1.0.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.2",
     "vue-template-compiler": "^2.6.11"
   }
 }

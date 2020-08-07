@@ -1,29 +1,77 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+<template lang="pug">
+  .home(ref="vcContainer")
+    vue-waterfall-ex(
+      :imgsArr="imgsArr"
+      :maxCols="3"
+      :imgWidth="300"
+      srcKey="preview"
+      @scrollReachBottom="getData"
+    )
+      template(v-slot="{data}")
+        .ctrl-box
+          .xxx {{data.id}}
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import { Component, Vue } from "vue-property-decorator";
+import axios from "axios";
+import VueWaterfallEx from "@/components/VueWaterfallEx";
+
+interface imgsObj {
+  [key: string]: string | number;
+}
 
 @Component({
   components: {
-    HelloWorld,
-  },
+    VueWaterfallEx
+  }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private imgsArr: imgsObj[] = [];
+
+  created() {
+    this.getData();
+  }
+
+  getData() {
+    axios
+      .get("https://yande.re/post.json", {
+        params: {
+          limit: 100,
+          page: 1,
+          tags: "misoni_comi"
+        }
+      })
+      .then((res: any) => {
+        res = res.data as { [key: string]: string | number }[];
+        const imgList: imgsObj[] = [];
+        res.forEach((item: { [key: string]: string | number }) => {
+          imgList.push({
+            id: item.id,
+            imgUrl: "https://yande.re/post/show/" + item.id,
+            preview: item.preview_url,
+            fileUrl: item.file_url,
+            width: Math.floor(item.width as number),
+            height: Math.floor(item.height as number)
+          });
+        });
+        this.imgsArr = imgList;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+}
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss" scoped>
+.home {
+  width: 100vw;
+  height: 100vh;
+  .ctrl-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
 }
 </style>
