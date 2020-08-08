@@ -19,7 +19,7 @@ yarn add vue-waterfall-ex
 ```
 ## 使用方法
 
-### 全局引入
+### 全局引入无效，待研究
 
 ```
 // main.js
@@ -27,6 +27,8 @@ yarn add vue-waterfall-ex
 import VueWaterfallEx from 'vue-waterfall-ex';
 Vue.use(VueWaterfallEx)
 ```
+
+
 ### 在组件中使用
 
 ```javascript
@@ -44,6 +46,7 @@ Vue.use(VueWaterfallEx)
           .xxx {{data.id}}
 </template>
 <script>
+import VueWaterfallEx from "vue-waterfall-ex"
 export default{
     data() {
       return {
@@ -72,6 +75,9 @@ export default{
         });
       }
     },
+    components: {
+      VueWaterfallEx
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -88,17 +94,17 @@ export default{
 ```
 ## Props
 
-| props               | type   | default | 说明                                  |
-| :------------------ | :----- | :------ | :----------------------------------- |
-| gap                 | Number | 20      | 图片间距                              |
+| props               | type   | default | 说明                       |
+| :------------------ | :----- | :------ | :----------------------- |
+| gap                 | Number | 20      | 图片间距                     |
 | height              | Number | -       | 容器高度（px）不传时父元素必须具有height |
-| imgsArr             | Array  | 必传    | 瀑布流数据                             |
-| imgWidth            | Number | 300     | 每列的基础宽度                         |
-| maxCols             | Number | 0       | 最多列数，0为不限                      |
-| reachBottomDistance | Number | 20      | 滚动触底距离，触发加载新图片             |
-| sectionSize         | Number | 600     |                                      |
-| srcKey              | String | 'src'   | 自定义图片地址的key值                  |
-| width               | Number | -       | 容器宽度（px）                         |
+| imgsArr             | Array  | 必传      | 瀑布流数据                    |
+| imgWidth            | Number | 300     | 每列的基础宽度                  |
+| maxCols             | Number | 0       | 最多列数，0为不限                |
+| reachBottomDistance | Number | 20      | 滚动触底距离，触发加载新图片           |
+| sectionSize         | Number | 600     |                          |
+| srcKey              | String | 'src'   | 自定义图片地址的key值             |
+| width               | Number | -       | 容器宽度（px）                 |
 
 
 
