@@ -2,14 +2,14 @@ import { ease } from './ease'
 import { requestAnimationFrame, cancelAnimationFrame } from './raf'
 import { getNow, extend } from './lang'
 
-interface optionsObj {
-    [key:string]: string| number | boolean
+interface OptionsObj {
+  [key: string]: string | number | boolean;
 }
-interface eventObj {
-    [key: string]: (Function|SmoothScrolling)[][]
+interface EventObj {
+  [key: string]: (Function | SmoothScrolling)[][];
 }
 
-const DEFAULT_OPTIONS: optionsObj = {
+const DEFAULT_OPTIONS: OptionsObj = {
   speed: 20,
   accelerationY: 4,
   invert: false,
@@ -19,8 +19,8 @@ const DEFAULT_OPTIONS: optionsObj = {
   bounceTime: 300
 }
 export default class SmoothScrolling {
-  private options: optionsObj
-  private _events: eventObj
+  private options: OptionsObj
+  private _events: EventObj
   private el: HTMLElement
   private x: number
   private y: number
@@ -34,9 +34,9 @@ export default class SmoothScrolling {
   private lastWheelDirection: string
   private isAnimating: boolean
   private animateTimer: any
-  
-  
-  constructor(scrollEl:HTMLDivElement, options:optionsObj = {}) {
+
+
+  constructor(scrollEl: HTMLDivElement, options: OptionsObj = {}) {
 
     this.options = extend({}, DEFAULT_OPTIONS, options)
 
@@ -85,11 +85,11 @@ export default class SmoothScrolling {
     }
   }
 
-  scrollTo(x: number, y: number, time: number = 0, easing = ease.bounce){
+  scrollTo(x: number, y: number, time = 0, easing = ease.bounce) {
     if (x === this.x && y === this.y) {
       return
     }
-    if (!time){
+    if (!time) {
       this._translate(x, y)
       this.trigger('scroll', {
         x, y
@@ -99,12 +99,12 @@ export default class SmoothScrolling {
       this._animate(x, y, time, easing.fn)
     }
   }
-  updateSize(size: { x: number; y: number }){
+  updateSize(size: { x: number; y: number }) {
     this.maxScrollX = size.x * -1
     this.maxScrollY = size.y * -1
     this.resetPosition(this.options.bounceTime as number)
   }
-  resetPosition(time = 0, easeing = ease.bounce){
+  resetPosition(time = 0, easeing = ease.bounce) {
     let x = this.x
     const roundX = Math.round(x)
     if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
@@ -130,21 +130,21 @@ export default class SmoothScrolling {
     return true
   }
 
-  _translate(x:number, y:number){
+  _translate(x: number, y: number) {
     this.el.style.transform = `translate(${x}px,${y}px)`
     this.x = x
     this.y = y
   }
 
-  _animate(destX: number, destY: number, duration: number, easingFn: Function){
+  _animate(destX: number, destY: number, duration: number, easingFn: Function) {
     const me = this
-    let startX = this.x
-    let startY = this.y
-    let startTime = getNow()
-    let destTime = startTime + duration
-    let newY_c: number = 0
+    const startX = this.x
+    const startY = this.y
+    const startTime = getNow()
+    const destTime = startTime + duration
+    let newYCopy = 0
 
-    function step(){
+    function step() {
       let now = getNow()
 
 
@@ -156,23 +156,23 @@ export default class SmoothScrolling {
       }
       destY = destY > 0
         ? Math.round(destY * 0.94) : destY < me.maxScrollY
-        ? Math.round( (destY - me.maxScrollY) * 0.94 + me.maxScrollY ) : destY;
+          ? Math.round((destY - me.maxScrollY) * 0.94 + me.maxScrollY) : destY;
       now = (now - startTime) / duration
-      let easing = easingFn(now)
-      let newX = (destX - startX) * easing + startX
-      let newY = (destY - startY) * easing + startY
+      const easing = easingFn(now)
+      const newX = (destX - startX) * easing + startX
+      const newY = (destY - startY) * easing + startY
 
       me._translate(newX, newY)
-      let isBackTop = newY > 0 && newY < newY_c
-      let isBackBottom = isBackTop ? true : newY < me.maxScrollY && newY > newY_c
-      if(isBackTop || isBackBottom){
-        newY_c = 0
+      const isBackTop = newY > 0 && newY < newYCopy
+      const isBackBottom = isBackTop ? true : newY < me.maxScrollY && newY > newYCopy
+      if (isBackTop || isBackBottom) {
+        newYCopy = 0
         me.isAnimating = false
         me.speed = me.options.speed as number
         me.resetPosition(me.options.bounceTime as number)
         return
       }
-      newY_c = newY
+      newYCopy = newY
 
       me.trigger('scroll', {
         x: me.x,
@@ -191,55 +191,54 @@ export default class SmoothScrolling {
   mousewheel(e: any) {
     e.preventDefault()
     e.stopPropagation()
-    const {accelerationY = 0.6, invert = false, easeTime = 300}:{
+    const { accelerationY = 0.6, invert = false, easeTime = 300 }: {
       accelerationY?: number;
       invert?: boolean;
-      easeTime?: number
+      easeTime?: number;
     } = this.options
 
     let wheelDeltaX
     let wheelDeltaY
     let wheelDirection
     switch (true) {
-      case 'deltaX' in e:
-        if (e.deltaMode === 1) {
-          wheelDeltaX = -e.deltaX * this.speed
-          wheelDeltaY = -e.deltaY * this.speed
-        } else {
-          wheelDeltaX = -e.deltaX / 10 * this.speed
-          wheelDeltaY = -e.deltaY / 10 * this.speed
-          wheelDirection = -e.deltaY < 0 ? 'down' : 'up'
-        }
-        break
-      case 'wheelDeltaX' in e:
-        wheelDeltaX = e.wheelDeltaX / 120 * this.speed
-        wheelDeltaY = e.wheelDeltaY / 120 * this.speed
-        break
-      case 'wheelDelta' in e:
-        wheelDeltaX = wheelDeltaY = e.wheelDelta / 120 * this.speed
-        break
-      case 'detail' in e:
-        wheelDeltaX = wheelDeltaY = -e.detail / 3 * this.speed
-        break
-      default:
-        return
+    case 'deltaX' in e:
+      if (e.deltaMode === 1) {
+        wheelDeltaX = -e.deltaX * this.speed
+        wheelDeltaY = -e.deltaY * this.speed
+      } else {
+        wheelDeltaX = -e.deltaX / 10 * this.speed
+        wheelDeltaY = -e.deltaY / 10 * this.speed
+        wheelDirection = -e.deltaY < 0 ? 'down' : 'up'
+      }
+      break
+    case 'wheelDeltaX' in e:
+      wheelDeltaX = e.wheelDeltaX / 120 * this.speed
+      wheelDeltaY = e.wheelDeltaY / 120 * this.speed
+      break
+    case 'wheelDelta' in e:
+      wheelDeltaX = wheelDeltaY = e.wheelDelta / 120 * this.speed
+      break
+    case 'detail' in e:
+      wheelDeltaX = wheelDeltaY = -e.detail / 3 * this.speed
+      break
+    default:
+      return
     }
     // console.log(wheelDirection);
 
-    if(wheelDirection === this.lastWheelDirection){
+    if (wheelDirection === this.lastWheelDirection) {
       this.speed = Math.floor(this.speed + accelerationY * easeTime / 1000)
-    }else{
+    } else {
       this.speed = this.options.speed as number
     }
     this.lastWheelDirection = wheelDirection as string
-    let direction = invert ? -1 : 1
+    const direction = invert ? -1 : 1
     wheelDeltaX *= direction
     wheelDeltaY *= direction
 
-    let newX: number;
-    let newY: number;
-    newX = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0)
-    newY = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0)
+
+    const newX: number = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0)
+    const newY: number = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0)
 
     // console.log(">>>",newY, this.y);
     this.scrollTo(newX, newY, easeTime as number, ease.swipeBounce)

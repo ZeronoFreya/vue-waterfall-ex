@@ -11,12 +11,13 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "typeRoots": [
-      "/@types",
-      "./node_modules/@types"
-    ],
+    "declaration": true,
+    "declarationDir": "lib",
     "types": [
       "webpack-env"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
     ],
     "paths": {
       "@/*": [
@@ -35,9 +36,10 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "examples/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
   ]
 }

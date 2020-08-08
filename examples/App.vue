@@ -15,19 +15,19 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
-import VueWaterfallEx from "@/components/VueWaterfallEx";
+// import VueWaterfallEx from "@/VueWaterfallEx.vue";
 
-interface imgsObj {
+interface ImgsObj {
   [key: string]: string | number;
 }
 
 @Component({
   components: {
-    VueWaterfallEx
+    // VueWaterfallEx
   }
 })
 export default class App extends Vue {
-  private imgsArr: imgsObj[] = [];
+  private imgsArr: ImgsObj[] = [];
 
   created() {
     this.getData();
@@ -44,7 +44,7 @@ export default class App extends Vue {
       })
       .then((res: any) => {
         res = res.data as { [key: string]: string | number }[];
-        const imgList: imgsObj[] = [];
+        const imgList: ImgsObj[] = [];
         res.forEach((item: { [key: string]: string | number }) => {
           imgList.push({
             id: item.id,

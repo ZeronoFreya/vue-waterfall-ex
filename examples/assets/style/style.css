@@ -1,0 +1,40 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font: 12px/1.5 'Microsoft Yahei', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #333;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+

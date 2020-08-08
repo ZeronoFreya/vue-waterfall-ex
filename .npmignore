@@ -5,6 +5,7 @@ package-lock.json
 tslint.json
 tsconfig.json
 *.log
+*.bat
 
 .DS_Store
 /dist
@@ -16,6 +17,7 @@ tsconfig.json
 .browserslistrc
 jest.config.js
 vue.config.js
+babel.config.js
 
 # local env files
 .env.local

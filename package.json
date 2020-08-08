@@ -1,20 +1,21 @@
 {
   "name": "vue-waterfall-ex",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "vue瀑布流组件",
   "author": "zeronofreya <zeronofreya@gmail.com>",
   "license": "MIT",
   "private": false,
-  "main": "dist/vue-waterfall-ex.umd.min.js",
+  "main": "lib/vue-waterfall-ex.umd.min.js",
+  "types": "lib/VueWaterfallEx.vue.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name vue-waterfall-ex ./src/components/index.ts"
+    "lib": "vue-cli-service build --target lib --name vue-waterfall-ex --dest lib ./src/index.ts",
+    "lint": "vue-cli-service lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZeronoFreya/vue-waterfall-ex"
+    "url": "https://github.com/ZeronoFreya/vue-waterfall-ex"
   },
   "bugs": {
     "url": "https://github.com/ZeronoFreya/vue-waterfall-ex/issues"
@@ -28,7 +29,16 @@
     "waterfall"
   ],
   "dependencies": {
-    "lodash-decorators": "^6.0.1"
+    "lodash-decorators": "^6.0.1",
+    "pug": "^3.0.0",
+    "pug-html-loader": "^1.1.5",
+    "pug-plain-loader": "^1.0.0",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.2"
+  },
+  "peerDependencies": {
+    "core-js": "^3.6.5",
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.33.0",
@@ -37,20 +47,15 @@
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-typescript": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "axios": "^0.19.2",
-    "core-js": "^3.6.5",
     "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
-    "pug": "^3.0.0",
-    "pug-html-loader": "^1.1.5",
-    "pug-plain-loader": "^1.0.0",
+    "prettier": "^1.19.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2",
     "vue-template-compiler": "^2.6.11"
   }
 }

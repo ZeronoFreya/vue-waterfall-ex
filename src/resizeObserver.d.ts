@@ -1,8 +1,8 @@
 declare class ResizeObserver {
   constructor(callback: ResizeObserverCallback);
-  observe: (target: Element, options?: ResizeObserverOptions) => void;
-  unobserve: (target: Element) => void;
-  disconnect: () => void;
+    observe: (target: Element, options?: ResizeObserverOptions) => void;
+    unobserve: (target: Element) => void;
+    disconnect: () => void;
 }
 
 type ResizeObserverBoxOptions = "border-box" | "content-box" | "device-pixel-content-box";
