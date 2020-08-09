@@ -324,6 +324,7 @@ export default class VueWaterfallEx extends Vue {
   private onContainerResized(): void {
     if (!this.outerEl) return;
     if (this.outerEl.clientHeight !== this.outerHeight) {
+      this.outerHeight = this.outerEl.clientHeight;
       smoothScrolling &&
         smoothScrolling.updateSize({
           x: this.totalWidth - this.scrollEl.clientWidth,
@@ -331,6 +332,7 @@ export default class VueWaterfallEx extends Vue {
         });
     }
     if (this.outerEl.clientWidth === this.outerWidth) return;
+    else this.outerWidth = this.outerEl.clientWidth;
     this.resetCollection();
   }
 
