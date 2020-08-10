@@ -37,7 +37,7 @@ export default class App extends Vue {
     axios
       .get("https://yande.re/post.json", {
         params: {
-          limit: 100,
+          limit: 3,
           page: 1,
           tags: "misoni_comi"
         }

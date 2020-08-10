@@ -323,6 +323,7 @@ export default class VueWaterfallEx extends Vue {
   @Throttle(250)
   private onContainerResized(): void {
     if (!this.outerEl) return;
+    // if (this.totalHeight <= this.outerHeight) return;
     if (this.outerEl.clientHeight !== this.outerHeight) {
       this.outerHeight = this.outerEl.clientHeight;
       smoothScrolling &&
@@ -339,6 +340,7 @@ export default class VueWaterfallEx extends Vue {
   @Bind()
   @Throttle(250)
   private onScroll(opt: MouseWheelEvent): void {
+    if (this.totalHeight <= this.outerHeight) return;
     this.scrollPos.x = opt.x;
     this.scrollPos.y = opt.y < 0 ? Math.abs(opt.y) : 0;
     const scrollEl = this.scrollEl;
