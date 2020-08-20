@@ -6,18 +6,15 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
+    "sourceMap": false,
     "declaration": true,
     "declarationDir": "lib",
+    "baseUrl": ".",
     "types": [
       "webpack-env"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
     ],
     "paths": {
       "@/*": [
@@ -36,10 +33,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "examples/**/*.tsx"
+    "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
+    "node_modules"
   ]
 }

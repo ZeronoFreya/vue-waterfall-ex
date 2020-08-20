@@ -38,19 +38,26 @@ Vue.use(VueWaterfallEx)
       :imgsArr="imgsArr"    // 瀑布流数据 —— 必填
       :maxCols="3"          // 最多列数
       :imgWidth="300"       // 每列的基础宽度
+      :moreHeight="moreHeight"      // 额外高度
+      :showLoading="loading",    // loading
       srcKey="preview"      // 自定义图片地址的key值
       @scrollReachBottom="getData"  // 滚动到底部获取更多数据
     )
       template(v-slot="{data}")
-        .ctrl-box                   // 自定义内容
-          .xxx {{data.id}}
+        .img-box            // 自定义内容
+          .img-wraper(:style="setImgWraperStyle(data)")
+            img(:src="data.preview")
+          .ctrl-box(:style="{height: moreHeight + 'px'}")
+            .xxx {{data.id}}
 </template>
 <script>
 import VueWaterfallEx from "vue-waterfall-ex"
 export default{
     data() {
       return {
-        imgsArr: []
+        imgsArr: [],
+        loading: false,
+        moreHeight: 60
       };
     },
     created() {
@@ -58,6 +65,7 @@ export default{
     },
     methods: {
       getData() {
+        this.loading = true;
         this.$axios.get("图片地址接口").then(res => {
           res = res.data;
           let imgList = [];
@@ -70,9 +78,16 @@ export default{
             });
           });
           this.imgsArr = imgList;
+          this.loading = false;
         }).catch(err => {
+          this.loading = false;
           console.log(err);
         });
+      },
+      setImgWraperStyle(data) {
+        return {
+          height: data._height - this.moreHeight + "px"
+        };
       }
     },
     components: {
@@ -84,27 +99,44 @@ export default{
 .home {
   width: 100vw;             // 容器的宽
   height: 100vh;            // 容器的高
-  .ctrl-box {
+  .img-box {
+    overflow: hidden;
     width: 100%;
     height: 100%;
-    position: relative;
+    .img-wraper {
+      width: 100%;
+      height: auto;
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        display: block;
+      }
+    }
+    .ctrl-box {
+      width: 100%;
+      position: relative;
+      padding: 10px;
+    }
   }
 }
 </style>
 ```
 ## Props
 
-| props               | type   | default | 说明                       |
-| :------------------ | :----- | :------ | :----------------------- |
-| gap                 | Number | 20      | 图片间距                     |
-| height              | Number | -       | 容器高度（px）不传时父元素必须具有height |
-| imgsArr             | Array  | 必传      | 瀑布流数据                    |
-| imgWidth            | Number | 300     | 每列的基础宽度                  |
-| maxCols             | Number | 0       | 最多列数，0为不限                |
-| reachBottomDistance | Number | 20      | 滚动触底距离，触发加载新图片           |
-| sectionSize         | Number | 600     |                          |
-| srcKey              | String | 'src'   | 自定义图片地址的key值             |
-| width               | Number | -       | 容器宽度（px）                 |
+| props               | type    | default | 说明                                  |
+| :------------------ | :------ | :------ | :----------------------------------- |
+| gap                 | Number  | 20      | 图片间距                              |
+| height              | Number  | -       | 容器高度（px）不传时父元素必须具有height |
+| imgsArr             | Array   | 必传    | 瀑布流数据                             |
+| imgWidth            | Number  | 300     | 每列的基础宽度（px）                   |
+| maxCols             | Number  | 0       | 最多列数，0为不限                      |
+| moreHeight          | Number  | 0       | 额外的高度（px）                       |
+| reachBottomDistance | Number  | 20      | 滚动触底距离（px），触发加载新图片       |
+| sectionSize         | Number  | 600     |                                      |
+| showLoading         | Boolean | false   | 是否显示loading                       |
+| srcKey              | String  | src     | 自定义图片地址的key值                  |
+| width               | Number  | -       | 容器宽度（px）                         |
 
 
 

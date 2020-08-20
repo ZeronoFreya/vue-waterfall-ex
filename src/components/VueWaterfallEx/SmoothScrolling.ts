@@ -1,5 +1,4 @@
 import { ease } from './ease'
-import { requestAnimationFrame, cancelAnimationFrame } from './raf'
 import { getNow, extend } from './lang'
 
 interface OptionsObj {
@@ -37,12 +36,12 @@ export default class SmoothScrolling {
 
 
   constructor(scrollEl: HTMLDivElement, options: OptionsObj = {}) {
-
     this.options = extend({}, DEFAULT_OPTIONS, options)
 
     this._events = {}
 
-    this.el = scrollEl.firstChild as HTMLElement
+    this.el = scrollEl.firstElementChild as HTMLElement
+    
     this.x = 0
     this.y = 0
     this.hasHorizontalScroll = this.options.scrollX as boolean
@@ -77,18 +76,12 @@ export default class SmoothScrolling {
     for (let i = 0; i < events.length; i++) {
       const event = eventsCopy[i]
       const [fn, context] = event
-      if (fn) {
-        // eslint-disable-next-line
-        // fn.apply(context, [].slice.call(arguments, 1))
-        (fn as Function).apply(context, args)
-      }
+      typeof fn === "function" && fn.apply(context, args);
     }
   }
 
   scrollTo(x: number, y: number, time = 0, easing = ease.bounce) {
-    if (x === this.x && y === this.y) {
-      return
-    }
+    if (x === this.x && y === this.y) return;
     if (!time) {
       this._translate(x, y)
       this.trigger('scroll', {
@@ -100,9 +93,12 @@ export default class SmoothScrolling {
     }
   }
   updateSize(size: { x: number; y: number }) {
-    this.maxScrollX = size.x * -1
-    this.maxScrollY = size.y * -1
-    this.resetPosition(this.options.bounceTime as number)
+    
+    if (size.x >= 0 && size.y >= 0) {
+      this.maxScrollX = size.x * -1;
+      this.maxScrollY = size.y * -1;
+      this.resetPosition(this.options.bounceTime as number)
+    }
   }
   resetPosition(time = 0, easeing = ease.bounce) {
     let x = this.x
@@ -130,7 +126,7 @@ export default class SmoothScrolling {
     return true
   }
 
-  _translate(x: number, y: number) {
+  _translate(x: number, y: number) {    
     this.el.style.transform = `translate(${x}px,${y}px)`
     this.x = x
     this.y = y
@@ -143,10 +139,9 @@ export default class SmoothScrolling {
     const startTime = getNow()
     const destTime = startTime + duration
     let newYCopy = 0
-
+    
     function step() {
       let now = getNow()
-
 
 
       if (now >= destTime) {
@@ -165,6 +160,8 @@ export default class SmoothScrolling {
       me._translate(newX, newY)
       const isBackTop = newY > 0 && newY < newYCopy
       const isBackBottom = isBackTop ? true : newY < me.maxScrollY && newY > newYCopy
+      // console.log(newY, startY);
+      
       if (isBackTop || isBackBottom) {
         newYCopy = 0
         me.isAnimating = false
@@ -197,9 +194,9 @@ export default class SmoothScrolling {
       easeTime?: number;
     } = this.options
 
-    let wheelDeltaX
-    let wheelDeltaY
-    let wheelDirection
+    let wheelDeltaX = 0
+    let wheelDeltaY = 0
+    let wheelDirection = ''
     switch (true) {
     case 'deltaX' in e:
       if (e.deltaMode === 1) {
@@ -231,7 +228,7 @@ export default class SmoothScrolling {
     } else {
       this.speed = this.options.speed as number
     }
-    this.lastWheelDirection = wheelDirection as string
+    this.lastWheelDirection = wheelDirection
     const direction = invert ? -1 : 1
     wheelDeltaX *= direction
     wheelDeltaY *= direction
