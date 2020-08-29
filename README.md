@@ -144,7 +144,7 @@ export default{
 <script lang="ts">
 // vue3
 import { defineComponent, ref, Ref, watch } from "vue";
-import VueWaterfallEx from "@/components/VueWaterfallEx/VueWaterfallEx.vue";
+import VueWaterfallEx from "vue-waterfall-ex";
 import axios from "axios";
 
 interface Ijson {
