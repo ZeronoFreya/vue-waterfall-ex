@@ -15,11 +15,3 @@ export function extend(target: AnyObj, ...rest: AnyObj[]) {
   }
   return target
 }
-
-export function isUndef(v: null | undefined) {
-  return v === undefined || v === null
-}
-
-export function getDistance(x: number, y: number) {
-  return Math.sqrt(x * x + y * y)
-}
