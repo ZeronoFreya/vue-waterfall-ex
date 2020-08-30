@@ -1,43 +1,25 @@
 <template lang="pug">
 .home
   vue-waterfall-ex(
-<<<<<<< HEAD
-=======
     ref="VueWaterfallEx",
     v-if="allImgsArr.length > 0",
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     :imgsArr="imgsArr",
     :maxCols="3",
     :imgWidth="300",
     :moreHeight="moreHeight",
-<<<<<<< HEAD
-    :showLoading="loading",
-    srcKey="preview",
-    @scroll-reach-bottom="getData"
-=======
+    :loading="isLoading",
     srcKey="preview",
     @scroll-reach-bottom="getData"
     @set-loading-stats="setLoadingStats"
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   )
     template(v-slot="{data}")
       .img-box
         .img-wraper(:style="setImgWraperStyle(data)")
           img(:src="data.preview")
-<<<<<<< HEAD
-        .ctrl-box(:style="{height: moreHeight + 'px'}")
-          .xxx(@click="viewImg(data.imgUrl)") {{ data.id }}
-</template>
-
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import VueWaterfallEx from "@/components/VueWaterfallEx/VueWaterfallEx.vue";
-import axios from "axios";
-=======
         .ctrl-box(:style="{ height: moreHeight + 'px' }")
           .xxx(@click="viewImg(data.imgUrl)") {{ data.id }}
   .flash(v-if="isFirstLoad") Flash
-  .loaderr(v-else-if="loadErr") Error...
+  .loaderr(v-else-if="loadErr && allImgsArr.length === 0") Error...
   .nodata(v-else-if="allImgsArr.length === 0") NoData
   .loading(v-if="isLoading")
     loading-page(:lineNum="5", lineColor="#ff6700")
@@ -48,7 +30,6 @@ import { defineComponent, ref, Ref, watch } from "vue";
 import VueWaterfallEx from "@/components/VueWaterfallEx/VueWaterfallEx.vue";
 import axios from "axios";
 import LoadingPage from "@/components/Loading.vue";
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 
 interface Ijson {
   [key: string]: string | number | boolean;
@@ -66,12 +47,6 @@ interface Iparams {
   tags?: string;
 }
 
-<<<<<<< HEAD
-export default defineComponent({
-  name: "App",
-  components: {
-    VueWaterfallEx
-=======
 type strNum = string | number;
 
 export default defineComponent({
@@ -79,7 +54,6 @@ export default defineComponent({
   components: {
     VueWaterfallEx,
     LoadingPage
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   },
   setup() {
     const imgsArr = ref<Ijson[]>([]);
@@ -88,41 +62,6 @@ export default defineComponent({
     const options: Iopt = {
       limit: process.env.VUE_APP_YANDE_LIMIT,
       tags: process.env.VUE_APP_YANDE_TAGS,
-<<<<<<< HEAD
-      url: process.env.VUE_APP_YANDE_URL
-    };
-
-    // options.limit = '10'
-    // options.tags = 'misoni_comi'
-    // options.url = '/yande/post'
-
-    const moreHeight = ref(60);
-
-    const loading = ref(false);
-
-    const formatData: (data: Ijson[]) => Ijson[] = data => {
-      const imgList: Ijson[] = [];
-      for (let i = 0; i < data.length; i++) {
-        const item = data[i];
-        imgList.push({
-          id: item.id,
-          imgUrl: "https://yande.re/post/show/" + item.id,
-          preview: item.preview_url,
-          fileUrl: item.file_url,
-          width: Number(item.width),
-          height: Number(item.height)
-        });
-      }
-      return imgList;
-    };
-
-    const getData: () => void = () => {
-      loading.value = true;
-      const _page = page + 1;
-      const params: Iparams = {
-        limit: Number(options.limit),
-        page: _page
-=======
       url: process.env.VUE_APP_YANDE_URL,
     };
 
@@ -166,34 +105,12 @@ export default defineComponent({
       const params: Iparams = {
         limit: Number(options.limit),
         page: _page,
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       };
       if (options.tags) {
         params.tags = options.tags;
       }
       axios
         .get(options.url, { params })
-<<<<<<< HEAD
-        .then((res: any) => {
-          imgsArr.value = formatData(res.data);
-          loading.value = false;
-          page = _page;
-        })
-        .catch(err => {
-          console.log(err);
-          loading.value = false;
-        });
-    };
-
-    const setImgWraperStyle: (data: Ijson) => Ijson = data => {
-      return {
-        height: Number(data._height) - 60 + "px"
-      };
-    };
-    const viewImg: (url: string) => void = (url) => {
-      window.open(url, "_blank")
-    }
-=======
         .then((res: any) => {          
           if (res.status === 200) {
             imgsArr.value = formatData(filterData(res.data));
@@ -228,20 +145,11 @@ export default defineComponent({
     watch(isLoading, (newVal: boolean) => {
       if (!newVal && isFirstLoad.value) isFirstLoad.value = false;
     });
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     getData();
 
     return {
       imgsArr,
       getData,
-<<<<<<< HEAD
-      loading,
-      setImgWraperStyle,
-      viewImg,
-      moreHeight
-    };
-  }
-=======
       isFirstLoad,
       setImgWraperStyle,
       viewImg,
@@ -253,7 +161,6 @@ export default defineComponent({
       loadErr
     };
   },
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 });
 </script>
 
@@ -279,17 +186,11 @@ export default defineComponent({
     }
     .ctrl-box {
       width: 100%;
-<<<<<<< HEAD
-      height: 60px;
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       position: relative;
       padding: 10px;
       display: flex;
     }
   }
-<<<<<<< HEAD
-=======
   .flash,
   .nodata,
   .loaderr {
@@ -312,7 +213,6 @@ export default defineComponent({
     width: 100px;
     height: 60px;
   }
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   // ::v-deep .vue-waterfall-ex-loading {
   //   top: auto;
   //   left: auto;
@@ -322,8 +222,4 @@ export default defineComponent({
   //   height: 60px;
   // }
 }
-<<<<<<< HEAD
-</style>
-=======
 </style> 
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12

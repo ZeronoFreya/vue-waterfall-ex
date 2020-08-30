@@ -1,10 +1,6 @@
 <template lang="pug">
 .vue-waterfall-ex-container(ref="outerEl", :style="containerStyle")
-<<<<<<< HEAD
-  .vue-waterfall-ex-scroll(ref="scrollEl", v-if="imgsCount > 0")
-=======
   .vue-waterfall-ex-scroll(ref="scrollEl")
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     .vue-waterfall-ex(:style="waterfallExStyle")
       .vue-waterfall-ex-top(ref="topTipEl", :style="topTipTranY")
         slot(name="waterfall-head") 前面没有了
@@ -23,15 +19,6 @@
         :style="overTipTranY"
       )
         slot(name="waterfall-over") 被你看光了
-<<<<<<< HEAD
-  .vue-waterfall-ex-loading(v-if="isLoading")
-    slot(name="waterfall-loading")
-      loading-line(:lineNum="5", lineColor="#ff6700")
-  .vue-waterfall-ex-nodata(ref="nodataEl", v-else-if="imgsCount === 0")
-    slot(name="waterfall-nodata")
-      .vue-waterfall-ex-nodata-default NoData
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 </template>
 
 <script lang="ts">
@@ -44,21 +31,13 @@ import {
   Ref,
   SetupContext,
   watch,
-<<<<<<< HEAD
-  nextTick,
-=======
   // nextTick
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   // reactive,
 } from "vue";
 
 import SectionManager from "./SectionManager";
 import SmoothScrolling from "./SmoothScrolling";
 import throttle from "lodash.throttle";
-<<<<<<< HEAD
-import LoadingLine from "./Loading.vue";
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 
 interface Ijson {
   [key: string]: string | number | boolean;
@@ -69,17 +48,6 @@ interface IdisplayItem extends Ijson {
   key: number;
 }
 
-<<<<<<< HEAD
-// interface ImgsObj {
-//   _x: number;
-//   _y: number;
-//   _width: number;
-//   _height: number;
-//   [key: string]: string | number;
-// }
-
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 interface IstringWH {
   width: string;
   height: string;
@@ -101,12 +69,6 @@ interface IstringWH {
 export default defineComponent({
   name: "VueWaterfallEx",
   props: {
-<<<<<<< HEAD
-    gap: {
-      type: Number,
-      default: 20,
-    },
-=======
     /**图片的间距
      * （水平|垂直）
      */
@@ -115,47 +77,10 @@ export default defineComponent({
       default: 20
     },
     /**容器的高度*/
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     height: {
       type: Number,
       validator(v: number): boolean {
         return v >= 0;
-<<<<<<< HEAD
-      },
-    },
-    imgsArr: {
-      type: Array,
-      required: true,
-    },
-    imgWidth: {
-      type: Number,
-      default: 300,
-    },
-    maxCols: {
-      type: Number,
-      default: 0,
-    },
-    moreHeight: {
-      type: Number,
-      default: 0,
-    },
-    reachBottomDistance: {
-      type: Number,
-      default: 20,
-    },
-    sectionSize: {
-      type: Number,
-      default: 600,
-    },
-    showLoading: {
-      type: Boolean,
-      default: false,
-    },
-    srcKey: {
-      type: String,
-      default: "src",
-    },
-=======
       }
     },
     /**图片数据
@@ -171,6 +96,11 @@ export default defineComponent({
     imgWidth: {
       type: Number,
       default: 300
+    },
+    /**loading状态*/
+    loading: {
+      type: Boolean,
+      default: false
     },
     /**最大列数，0为不限制*/
     maxCols: {
@@ -203,70 +133,22 @@ export default defineComponent({
       default: "src"
     },
     /**容器的宽度*/
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     width: {
       type: Number,
       validator(v: number): boolean {
         return v >= 0;
-<<<<<<< HEAD
-      },
-    },
-  },
-  components: {
-    LoadingLine,
-  },
-  emits: ["scroll-reach-bottom"],
-=======
       }
     }
   },
   // components: {
   // },
   emits: ["scroll-reach-bottom", "set-loading-stats", "img-error"],
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   // eslint-disable-next-line
   setup(props: Readonly<any>, context: SetupContext) {
     let loadedCount: number;
     let sectionManager: SectionManager | null = null;
     let smoothScrolling: SmoothScrolling | null = null;
 
-<<<<<<< HEAD
-    // let imgsArr: Ijson[] = props.imgsArr.concat();
-    const imgsArr = ref<Ijson[]>(props.imgsArr);
-    const imgsCount = ref(imgsArr.value.length);
-    // 开始要排列的图片索引,首次为第二列的第一张图片，
-    // 后续加载则为已经排列图片的下一个索引
-    let beginIndex = 0;
-    // 需要根据窗口宽度初始化
-    let cols = 1;
-    let colsHeightArr: number[] = [];
-    const displayItems = ref<IdisplayItem[]>([]);
-    let imgsArrCopy: Ijson[] = [];
-    const imgWidthCopy = ref(0);
-    let isFirstLoad = true;
-    const isLoading = ref(true);
-    let outerHeight = 0;
-    let outerWidth = 0;
-    // 结束waterfall加载
-    const over = ref(false);
-    let resizeObserver: ResizeObserver | null = null;
-    const scrollPos = { x: 0, y: 0 };
-    const totalHeight = ref(0);
-    const totalWidth = ref(0);
-
-    // const topTipH = ref(0);
-    // const topTipTranY = ref(0);
-    const scrollY = ref(0);
-
-    // const pImgsArr = ref<Ijson[]>(props.imgsArr);
-
-    const outerEl: Ref<HTMLDivElement | null> = ref(null);
-    const scrollEl: Ref<HTMLDivElement | null> = ref(null);
-    const nodataEl: Ref<HTMLDivElement | null> = ref(null);
-    const topTipEl: Ref<HTMLDivElement | null> = ref(null);
-    const overTipEl: Ref<HTMLDivElement | null> = ref(null);
-    // let scrollOrNodataEl: HTMLDivElement | null = null;
-=======
     /**当前页图片数据的拷贝*/
     const imgsArr = ref<Ijson[]>(props.imgsArr);
 
@@ -289,8 +171,6 @@ export default defineComponent({
     let outerHeight = 0;
     /**容器的宽度*/
     let outerWidth = 0;
-    /**是否触底*/
-    let reachBottom = false;
     /**结束waterfall加载*/
     const over = ref(false);
     let resizeObserver: ResizeObserver | null = null;
@@ -304,17 +184,12 @@ export default defineComponent({
     const scrollEl: Ref<HTMLDivElement | null> = ref(null);
     const topTipEl: Ref<HTMLDivElement | null> = ref(null);
     const overTipEl: Ref<HTMLDivElement | null> = ref(null);
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 
     const containerStyle = computed(
       (): IstringWH => {
         return {
           height: props.height ? props.height + "px" : "100%",
-<<<<<<< HEAD
-          width: props.width ? props.width + "px" : "100%",
-=======
           width: props.width ? props.width + "px" : "100%"
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         };
       }
     );
@@ -323,21 +198,13 @@ export default defineComponent({
       (): IstringWH => {
         return {
           height: totalHeight.value + "px",
-<<<<<<< HEAD
-          width: totalWidth.value + "px",
-=======
           width: totalWidth.value + "px"
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         };
       }
     );
 
     const colWidth = computed((): number => {
-<<<<<<< HEAD
-      return imgWidthCopy.value + props.gap;
-=======
       return imgWidth.value + props.gap;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     });
 
     const topTipTranY = computed(() => {
@@ -349,11 +216,7 @@ export default defineComponent({
       }
 
       return {
-<<<<<<< HEAD
-        transform: `translateY(${topTipTranY}px)`,
-=======
         transform: `translateY(${topTipTranY}px)`
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       };
     });
     const overTipTranY = computed(() => {
@@ -368,22 +231,6 @@ export default defineComponent({
         overTipTranY = bottom;
       }
       return {
-<<<<<<< HEAD
-        transform: `translateY(${overTipTranY}px)`,
-      };
-    });
-
-    /**
-     * 计算瀑布流的列数及每列的宽度
-     */
-    const calcColsAndImgW: () => void = () => {
-      if (!outerEl.value) return;
-      const colWidth: number = props.imgWidth + props.gap;
-      const w: number = outerEl.value.clientWidth + props.gap;
-      let _cols: number = Math.floor(w / colWidth);
-      // 当剩余空间大于imgWidth一半时，cols加1
-      _cols += w % colWidth > props.imgWidth / 2 ? 1 : 0;
-=======
         transform: `translateY(${overTipTranY}px)`
       };
     });
@@ -397,22 +244,14 @@ export default defineComponent({
       let _cols: number = Math.floor(w / _colWidth);
       // 当剩余空间大于imgWidth一半时，cols加1
       _cols += w % _colWidth > props.imgWidth / 2 ? 1 : 0;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       _cols = _cols === 0 ? 1 : _cols;
       const _imgWidth: number = Math.floor(w / _cols - props.gap);
       if (props.maxCols > 0 && _cols > props.maxCols) {
         cols = props.maxCols;
-<<<<<<< HEAD
-        imgWidthCopy.value =
-          _imgWidth > props.imgWidth ? _imgWidth : props.imgWidth;
-      } else {
-        imgWidthCopy.value = _imgWidth;
-=======
         imgWidth.value =
           _imgWidth > props.imgWidth ? _imgWidth : props.imgWidth;
       } else {
         imgWidth.value = _imgWidth;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         cols = _cols;
       }
     };
@@ -420,19 +259,11 @@ export default defineComponent({
     const waterfallNew: () => void = () => {
       if (imgsArr.value.length === 0) return;
       let top: number, left: number, height: number;
-<<<<<<< HEAD
-      // const colWidth = this.colWidth;
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       for (let i = 0; i < imgsArr.value.length; i++) {
         // if (!imgsArr[i]) return;
         const _imgsArr = imgsArr.value[i];
         height = (_imgsArr._height as number) + props.gap;
-<<<<<<< HEAD
-        if (imgsArrCopy.length < cols) {
-=======
         if (allImgsArr.length < cols) {
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
           colsHeightArr.push(height);
           top = 0;
           left = i * colWidth.value;
@@ -447,30 +278,14 @@ export default defineComponent({
         }
         _imgsArr._y = top;
         _imgsArr._x = left;
-<<<<<<< HEAD
-        imgsArrCopy.push({
-          ..._imgsArr,
-=======
         allImgsArr.push({
           ..._imgsArr
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         });
       }
     };
 
     const waterfallAll: () => void = () => {
       let top: number, left: number, height: number;
-<<<<<<< HEAD
-      // const _colWidth = this.colWidth
-      colsHeightArr = [];
-      const newArr: Ijson[] = [];
-      for (let i = 0; i < imgsArrCopy.length; i++) {
-        const imgEl = imgsArrCopy[i];
-        imgEl._width = imgWidthCopy.value;
-        imgEl._height =
-          Math.round(
-            (imgWidthCopy.value * (imgEl.height as number)) /
-=======
       colsHeightArr = [];
       const newArr: Ijson[] = [];
       for (let i = 0; i < allImgsArr.length; i++) {
@@ -479,7 +294,6 @@ export default defineComponent({
         imgEl._height =
           Math.round(
             (imgWidth.value * (imgEl.height as number)) /
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
               (imgEl.width as number)
           ) + props.moreHeight;
         height = (imgEl._height as number) + props.gap;
@@ -499,17 +313,10 @@ export default defineComponent({
         imgEl._y = top;
         imgEl._x = left;
         newArr.push({
-<<<<<<< HEAD
-          ...imgEl,
-        });
-      }
-      imgsArrCopy = newArr;
-=======
           ...imgEl
         });
       }
       allImgsArr = newArr;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     };
     /**
      * flushDisplayItems
@@ -519,24 +326,15 @@ export default defineComponent({
       y: number;
       width: number;
       height: number;
-<<<<<<< HEAD
-    }) => void = (rect) => {
-=======
     }) => void = rect => {
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       const { x, y, width, height } = rect;
       const _displayItems: IdisplayItem[] = [];
       const indices: number[] = sectionManager
         ? sectionManager.getCellIndices({
             _height: height,
             _width: width,
-<<<<<<< HEAD
-            _x: x,
-            _y: y,
-=======
             _x: Math.floor(x),
             _y: Math.floor(y)
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
           })
         : [];
       for (let i = 0; i < indices.length; i++) {
@@ -545,28 +343,16 @@ export default defineComponent({
           Object.freeze({
             itemIndex,
             key: _displayItems.length,
-<<<<<<< HEAD
-            ...imgsArrCopy[itemIndex],
-=======
             ...allImgsArr[itemIndex]
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
           })
         );
       }
       if (window.requestAnimationFrame) {
         window.requestAnimationFrame(() => {
           displayItems.value = _displayItems;
-<<<<<<< HEAD
-          // this.$forceUpdate();
         });
       } else {
         displayItems.value = _displayItems;
-        // this.$forceUpdate();
-=======
-        });
-      } else {
-        displayItems.value = _displayItems;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       }
     };
     /**
@@ -574,13 +360,8 @@ export default defineComponent({
      */
     const onCollectionChanged: () => void = () => {
       if (!scrollEl.value) return;
-<<<<<<< HEAD
-      for (let i = beginIndex; i < imgsArrCopy.length; i++) {
-        const { _x, _y, _width, _height } = imgsArrCopy[i];
-=======
       for (let i = beginIndex; i < allImgsArr.length; i++) {
         const { _x, _y, _width, _height } = allImgsArr[i];
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         sectionManager &&
           sectionManager.registerCell({
             index: i,
@@ -588,18 +369,6 @@ export default defineComponent({
               _x: _x as number,
               _y: _y as number,
               _width: _width as number,
-<<<<<<< HEAD
-              _height: _height as number,
-            },
-          });
-      }
-      // 排列完之后，新增图片从这个索引开始预加载图片和排列
-      beginIndex = imgsArrCopy.length;
-      flushDisplayItems({
-        ...scrollPos,
-        width: scrollEl.value.clientWidth,
-        height: scrollEl.value.clientHeight,
-=======
               _height: _height as number
             }
           });
@@ -612,7 +381,6 @@ export default defineComponent({
         x, y,
         width: scrollEl.value.clientWidth,
         height: scrollEl.value.clientHeight
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       });
     };
 
@@ -625,10 +393,6 @@ export default defineComponent({
         h = Math.max(...colsHeightArr) - props.gap;
       }
       totalHeight.value = h > 0 ? h : 0;
-<<<<<<< HEAD
-      totalWidth.value = cols * colWidth.value - props.gap;
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     };
 
     /**
@@ -647,21 +411,14 @@ export default defineComponent({
       onCollectionChanged();
       mathTotalHeight();
 
-<<<<<<< HEAD
-=======
       totalWidth.value = cols * colWidth.value - props.gap;
 
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       const x = totalWidth.value - scrollEl.value.clientWidth;
       const y = totalHeight.value - scrollEl.value.clientHeight;
       smoothScrolling &&
         smoothScrolling.updateSize({
           x: x < 0 ? 0 : x,
-<<<<<<< HEAD
-          y: y < 0 ? 0 : y,
-=======
           y: y < 0 ? 0 : y
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         });
     };
 
@@ -672,29 +429,17 @@ export default defineComponent({
       top: string;
       width: string;
       height: string;
-<<<<<<< HEAD
-    } = (displayItem) => {
-=======
     } = displayItem => {
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       const { _width, _height, _x, _y } = displayItem;
       return {
         left: `${_x}px`,
         top: `${_y}px`,
         width: `${_width}px`,
-<<<<<<< HEAD
-        height: `${_height}px`,
-      };
-    };
-
-    const onContainerResized = throttle(function () {
-=======
         height: `${_height}px`
       };
     };
     /**窗口尺寸变化时的回调 */
     const onContainerResized = throttle(function() {
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       if (!outerEl.value || !scrollEl.value) return;
       // 竖版瀑布流
       if (outerEl.value.clientWidth !== outerWidth) {
@@ -709,38 +454,11 @@ export default defineComponent({
         smoothScrolling &&
           smoothScrolling.updateSize({
             x: x < 0 ? 0 : x,
-<<<<<<< HEAD
-            y: y < 0 ? 0 : y,
-=======
             y: y < 0 ? 0 : y
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
           });
       }
     }, 250);
 
-<<<<<<< HEAD
-    const __onScroll = throttle(function (opt: MouseWheelEvent) {
-      if (!scrollEl.value) return;
-      scrollPos.x = opt.x;
-      scrollPos.y = opt.y < 0 ? Math.abs(opt.y) : 0;
-
-      flushDisplayItems({
-        ...scrollPos,
-        width: scrollEl.value.clientWidth,
-        height: scrollEl.value.clientHeight,
-      });
-      if (isLoading.value || over.value) return;
-      // console.log('over', over);
-
-      const minHeight: number = Math.min(...colsHeightArr);
-      if (
-        scrollPos.y + scrollEl.value.offsetHeight >
-        minHeight - props.reachBottomDistance
-      ) {
-        // isLoading.value = true;
-        // 滚动触底
-        console.log("触底");
-=======
     const __onScroll = throttle(function() {
       if (!scrollEl.value) return;
       const x = scrollX.value < 0 ? Math.abs(scrollX.value) : 0;
@@ -751,7 +469,7 @@ export default defineComponent({
         width: scrollEl.value.clientWidth,
         height: scrollEl.value.clientHeight
       });
-      if (reachBottom || over.value) return;
+      if (props.loading || over.value) return;
 
       const minHeight: number = Math.min(...colsHeightArr);
       if (
@@ -760,27 +478,10 @@ export default defineComponent({
       ) {
         // 滚动触底
         console.log("触底");
-        reachBottom = true;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         context.emit("scroll-reach-bottom");
       }
     }, 250);
 
-<<<<<<< HEAD
-    const onScroll: (opt: MouseWheelEvent) => void = (opt) => {
-      if (totalHeight.value <= outerHeight) return;
-      scrollY.value = opt.y;
-      __onScroll(opt);
-    };
-
-    /**
-     * preloaded
-     */
-    const preloaded: () => void = () => {
-      if (!scrollEl.value) return;
-      // console.log("preloaded");
-      // isFirstLoad = true;
-=======
     const onScroll: (opt: MouseWheelEvent) => void = opt => {
       if (totalHeight.value <= outerHeight) return;
       scrollX.value = opt.x;
@@ -793,7 +494,6 @@ export default defineComponent({
     const preloaded: () => void = () => {
       if (!scrollEl.value) return;
       // console.log("preloaded");
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       waterfallNew();
       onCollectionChanged();
       mathTotalHeight();
@@ -802,48 +502,27 @@ export default defineComponent({
       smoothScrolling &&
         smoothScrolling.updateSize({
           x: x < 0 ? 0 : x,
-<<<<<<< HEAD
-          y: y < 0 ? 0 : y,
-        });
-=======
           y: y < 0 ? 0 : y
         });
-      reachBottom = false;
       context.emit("set-loading-stats", false);
     };
 
     const preloadImg: (imgItem: Ijson) => void = imgItem => {
       const img = new Image();
       img.src = imgItem[props.srcKey] as string;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     };
 
     const preload: () => void = () => {
       // console.log('preload');
-<<<<<<< HEAD
-
-      // let imgItem: ImgsObj
-      loadedCount = 0;
-      if (imgsArr.value.length === 0) return;
-=======
       loadedCount = 0;
       if (imgsArr.value.length === 0) return;
       // eslint-disable-next-line
       const timer: { [key: string]: any } = {};
       context.emit("set-loading-stats", true);
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       for (let i = 0; i < imgsArr.value.length; i++) {
         const imgItem = imgsArr.value[i];
         if (imgItem.width && imgItem.height) {
           loadedCount++;
-<<<<<<< HEAD
-          imgItem._width = imgWidthCopy.value;
-          imgItem._height =
-            Math.round(
-              (imgWidthCopy.value * (imgItem.height as number)) /
-                (imgItem.width as number)
-            ) + props.moreHeight;
-=======
           imgItem._width = imgWidth.value;
           imgItem._height =
             Math.round(
@@ -851,32 +530,11 @@ export default defineComponent({
                 (imgItem.width as number)
             ) + props.moreHeight;
           props.preloadImg && preloadImg(imgItem);
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
           if (loadedCount === imgsArr.value.length) {
             // context.emit("preloaded")
             return preloaded();
           }
         } else {
-<<<<<<< HEAD
-          console.log("没有宽高");
-          //       const oImg = new Image();
-          //       oImg.src = imgItem.src;
-          //       oImg.onload = oImg.onerror = e => {
-          //         this.loadedCount++;
-          //         // 预加载图片，计算图片容器的高
-          //         imgItem._height =
-          //           e.type == "load"
-          //             ? Math.round(this.imgWidthCopy / (oImg.width / oImg.height))
-          //             : this.imgWidthCopy;
-          //         if (e.type == "error") {
-          //           imgItem._error = true;
-          //           this.$emit("imgError", imgItem);
-          //         }
-          //         if (this.loadedCount == this.imgsArr.length) {
-          //           this.$emit("preloaded");
-          //         }
-          //       };
-=======
           imgItem._width = imgWidth.value;
           const img = new Image();
           img.src = imgItem[props.srcKey] as string;
@@ -927,7 +585,6 @@ export default defineComponent({
               
             };
           }
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
         }
       }
     };
@@ -946,11 +603,8 @@ export default defineComponent({
       sectionManager = new SectionManager(props.sectionSize);
       calcColsAndImgW();
 
-<<<<<<< HEAD
-=======
       totalWidth.value = cols * colWidth.value - props.gap;
 
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       if (ResizeObserver) {
         resizeObserver = new ResizeObserver(onContainerResized);
         resizeObserver.observe(outerEl.value);
@@ -959,30 +613,6 @@ export default defineComponent({
       }
     };
 
-<<<<<<< HEAD
-    const wImgsArr: (newVal: Ijson[]) => void = (newVal) => {
-      imgsArr.value = newVal;
-      // isLoading.value = false;
-      if (newVal.length > 0) {
-        imgsCount.value += newVal.length;
-        if (isFirstLoad) {
-          isFirstLoad = false;
-          nextTick(() => {
-            init();
-            preload();
-          });
-        } else {
-          preload();
-        }
-      } else over.value = true;
-    };
-
-    watch(
-      () => props.imgsArr,
-      (newVal: Ijson[]) => {
-        // console.log("watch", newVal.length);
-        wImgsArr(newVal);
-=======
     watch(
       () => props.imgsArr,
       (newVal: Ijson[]) => {
@@ -990,31 +620,13 @@ export default defineComponent({
         imgsArr.value = newVal;
         if(newVal.length > 0) preload();
         else over.value = true;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       },
       { deep: false, immediate: false }
     );
 
-<<<<<<< HEAD
-    watch(
-      () => props.showLoading,
-      (newVal: boolean) => {
-        isLoading.value = newVal;
-      }
-    );
-
-    onMounted(() => {
-      if (scrollEl.value) {
-        isFirstLoad = false;
-        // isLoading.value = false;
-        init();
-        preload();
-      }
-=======
     onMounted(() => {
       init();
       preload();
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     });
 
     onBeforeUnmount(() => {
@@ -1026,10 +638,6 @@ export default defineComponent({
     });
 
     return {
-<<<<<<< HEAD
-      imgsCount,
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
       containerStyle,
       waterfallExStyle,
       displayItems,
@@ -1039,41 +647,20 @@ export default defineComponent({
       over,
       outerEl,
       scrollEl,
-<<<<<<< HEAD
-      nodataEl,
-      topTipEl,
-      overTipEl,
-      isLoading,
-    };
-  },
-=======
       topTipEl,
       overTipEl,
     };
   }
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 });
 </script>
 
 <style lang="scss" scoped>
 .vue-waterfall-ex-container {
-<<<<<<< HEAD
-  // width: 100%;
-  // height: 100%;
   position: relative;
-
-=======
-  position: relative;
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
   .vue-waterfall-ex-scroll {
     position: relative;
     width: 100%;
     height: 100%;
-<<<<<<< HEAD
-    // overflow-x: hidden;
-    // overflow-y: scroll;
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
   }
@@ -1116,10 +703,6 @@ export default defineComponent({
     position: absolute;
     top: 0;
     left: 0;
-<<<<<<< HEAD
-    // transform: translateY(-100%);
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     width: 100%;
     height: 50px;
     display: flex;
@@ -1132,10 +715,6 @@ export default defineComponent({
     position: absolute;
     bottom: 0;
     left: 0;
-<<<<<<< HEAD
-    // transform: translateY(100%);
-=======
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
     width: 100%;
     height: 50px;
     display: flex;
@@ -1143,33 +722,7 @@ export default defineComponent({
     align-items: center;
     font-size: 12px;
     color: #aaa;
-<<<<<<< HEAD
-    // background-color: gold;
-  }
-  .vue-waterfall-ex-loading {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100px;
-    height: 60px;
-  }
-  .vue-waterfall-ex-nodata {
-    width: 100%;
-    height: 100%;
-    .vue-waterfall-ex-nodata-default {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 60px;
-      color: #666;
-      font-weight: bold;
-    }
-  }
-=======
   }
 
->>>>>>> 04b2b59cfe43670b2e4a8564b27336ac68110d12
 }
 </style>
