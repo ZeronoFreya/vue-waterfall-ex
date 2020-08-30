@@ -23,6 +23,7 @@ module.exports = {
     "space-before-function-paren": 0,
     // 忽略大括号内的空格
     "object-curly-spacing": 0,
-    "@typescript-eslint/no-this-alias": 0
+    "@typescript-eslint/no-this-alias": 0,
+    "@typescript-eslint/camelcase": 0
   }
 };
